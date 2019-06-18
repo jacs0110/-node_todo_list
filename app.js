@@ -91,7 +91,13 @@ app.post('/todos/:id', (req, res) => {
 
 // delete a todo
 app.post('/todos/:id/delete', (req, res) => {
-  res.send('delete a todo')
+  Todo.findById(req.params.id, (err, todo) => {
+    if (err) console.error(err)
+    todo.remove(err => {
+      if (err) console.error(err)
+      res.redirect(`/`)
+    })
+  })
 })
 
 // listening on localhost
