@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
 const exphbs = require('express-handlebars')
+const bodyParser = require('body-parser');
 const port = 3000
 
 // setup view engine
@@ -26,6 +27,9 @@ db.once('open', () => {
 // Load models
 const Todo = require('./models/todo.js')
 
+// setup body-parser
+app.use(bodyParser.urlencoded({ extended: true }));
+
 // routes 
 // index
 app.get('/', (req, res) => {
@@ -42,7 +46,7 @@ app.get('/todos', (req, res) => {
 
 // new todo creating page
 app.get('/todos/new', (req, res) => {
-  res.send('show todo creating page')
+  res.render('new')
 })
 
 // show one todo page
@@ -52,7 +56,14 @@ app.get('/todos/:id', (req, res) => {
 
 // create a new todo
 app.post('/todos', (req, res) => {
-  res.send('create a new todo')
+  const todo = Todo({
+    name: req.body.name
+  })
+
+  todo.save(err => {
+    if (err) console.error
+    res.redirect('/')
+  })
 })
 
 // todo editing page
