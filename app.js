@@ -24,12 +24,15 @@ db.once('open', () => {
 })
 
 // Load models
-const Todo = require('./models/todo')
+const Todo = require('./models/todo.js')
 
 // routes 
 // index
 app.get('/', (req, res) => {
-  res.render('index')
+  Todo.find((err, todos) => {
+    if (err) return console.error(err)
+    res.render('index', { todos: todos })
+  })
 })
 
 // list all todos
