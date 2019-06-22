@@ -31,83 +31,8 @@ db.once('open', () => {
 const Todo = require('./models/todo.js')
 
 // routes 
-// index
-app.get('/', (req, res) => {
-  // Todo.find((err, todos) => {
-  //   if (err) return console.error(err)
-  //   res.render('index', { todos: todos })
-  // })
-  Todo.find({}).sort({ done: 'asc', name: 'asc' }).exec((err, todos) => {
-    if (err) return console.error(err)
-    return res.render('index', { todos: todos })
-  })
-})
-
-// list all todos
-// app.get('/todos', (req, res) => {
-//   res.send('list all todos')
-// })
-
-// new todo creating page
-app.get('/todos/new', (req, res) => {
-  res.render('new')
-})
-
-// show one todo page
-app.get('/todos/:id', (req, res) => {
-  Todo.findById(req.params.id, (err, todo) => {
-    if (err) console.error(err)
-    res.render('detail', { todo: todo })
-  })
-})
-
-// create a new todo
-app.post('/todos', (req, res) => {
-  const todo = Todo({
-    name: req.body.name
-  })
-
-  todo.save(err => {
-    if (err) console.error(err)
-    res.redirect('/')
-  })
-})
-
-// todo editing page
-app.get('/todos/:id/edit', (req, res) => {
-  Todo.findById(req.params.id, (err, todo) => {
-    if (err) console.error(err)
-    res.render('edit', { todo: todo })
-  })
-})
-
-// edit a todo
-app.put('/todos/:id', (req, res) => {
-  Todo.findById(req.params.id, (err, todo) => {
-    if (err) console.error(err)
-    todo.name = req.body.name
-    if (req.body.done === 'on') {
-      todo.done = true
-    } else {
-      todo.done = false
-    }
-    todo.save(err => {
-      if (err) console.error(err)
-      res.redirect(`/todos/${req.params.id}`)
-    })
-  })
-})
-
-// delete a todo
-app.delete('/todos/:id/delete', (req, res) => {
-  Todo.findById(req.params.id, (err, todo) => {
-    if (err) console.error(err)
-    todo.remove(err => {
-      if (err) console.error(err)
-      res.redirect(`/`)
-    })
-  })
-})
+app.use('/', require('./routes/home'))
+app.use('/todos', require('./routes/todo.js'))
 
 // listening on localhost
 app.listen(port, () => {
