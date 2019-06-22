@@ -4,11 +4,14 @@ const app = express()
 const mongoose = require('mongoose')
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser');
+const methodOverride = require('method-override')
 const port = 3000
 
-// setup view engine
+// setup the app
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
+app.use(methodOverride('_method'))
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // connect to db
 mongoose.connect('mongodb://localhost/todo', { useNewUrlParser: true })
@@ -26,9 +29,6 @@ db.once('open', () => {
 
 // Load models
 const Todo = require('./models/todo.js')
-
-// setup body-parser
-app.use(bodyParser.urlencoded({ extended: true }));
 
 // routes 
 // index
@@ -82,7 +82,7 @@ app.get('/todos/:id/edit', (req, res) => {
 })
 
 // edit a todo
-app.post('/todos/:id', (req, res) => {
+app.put('/todos/:id', (req, res) => {
   Todo.findById(req.params.id, (err, todo) => {
     if (err) console.error(err)
     todo.name = req.body.name
@@ -99,7 +99,7 @@ app.post('/todos/:id', (req, res) => {
 })
 
 // delete a todo
-app.post('/todos/:id/delete', (req, res) => {
+app.delete('/todos/:id/delete', (req, res) => {
   Todo.findById(req.params.id, (err, todo) => {
     if (err) console.error(err)
     todo.remove(err => {
