@@ -33,16 +33,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // routes 
 // index
 app.get('/', (req, res) => {
-  Todo.find((err, todos) => {
+  // Todo.find((err, todos) => {
+  //   if (err) return console.error(err)
+  //   res.render('index', { todos: todos })
+  // })
+  Todo.find({}).sort({ done: 'asc', name: 'asc' }).exec((err, todos) => {
     if (err) return console.error(err)
-    res.render('index', { todos: todos })
+    return res.render('index', { todos: todos })
   })
 })
 
 // list all todos
-app.get('/todos', (req, res) => {
-  res.send('list all todos')
-})
+// app.get('/todos', (req, res) => {
+//   res.send('list all todos')
+// })
 
 // new todo creating page
 app.get('/todos/new', (req, res) => {
