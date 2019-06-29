@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const User = require('../models/user')
 
 // login page
 router.get('/login', (req, res) => {
@@ -18,7 +19,30 @@ router.get('/register', (req, res) => {
 
 // register check
 router.post('/register', (req, res) => {
-  res.send('register')
+  const { name, email, password, password2 } = req.body
+  User.findOne({ email: email }).then(user => {
+    if (user) {
+      console.log('User already exists!')
+      res.render('register', {
+        name,
+        email,
+        password,
+        password2
+      })
+    } else if (password === password2) {
+      const newUser = new User({
+        name,
+        email,
+        password
+      })
+      newUser.save().then(user => {
+        res.redirect('/')
+      })
+      console.log('New user has been created!')
+    } else if (password !== password2) {
+      console.log('Two passwords are not consistent')
+    }
+  }).catch(err => console.log(err))
 })
 
 // log out
