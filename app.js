@@ -29,6 +29,7 @@ db.once('open', () => {
 
 // Load models
 const Todo = require('./models/todo.js')
+const User = require('./models/user.js')
 
 // routes 
 app.use('/', require('./routes/home.js'))
