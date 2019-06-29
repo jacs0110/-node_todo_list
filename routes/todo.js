@@ -2,8 +2,10 @@ const express = require('express')
 const router = express.Router()
 const Todo = require('../models/todo')
 
+const { authenticated } = require('../config/auth')
+
 // index
-router.get('/', (req, res) => {
+router.get('/', authenticated, (req, res) => {
   Todo.find({}).sort({ done: 'asc', name: 'asc' }).exec((err, todos) => {
     if (err) return console.error(err)
     return res.render('index', { todos: todos })
@@ -11,12 +13,12 @@ router.get('/', (req, res) => {
 })
 
 // new todo creating page
-router.get('/new', (req, res) => {
+router.get('/new', authenticated, (req, res) => {
   res.render('new')
 })
 
 // show one todo page
-router.get('/:id', (req, res) => {
+router.get('/:id', authenticated, (req, res) => {
   Todo.findById(req.params.id, (err, todo) => {
     if (err) console.error(err)
     res.render('detail', { todo: todo })
@@ -24,7 +26,7 @@ router.get('/:id', (req, res) => {
 })
 
 // create a new todo
-router.post('/', (req, res) => {
+router.post('/', authenticated, (req, res) => {
   const todo = Todo({
     name: req.body.name
   })
@@ -36,7 +38,7 @@ router.post('/', (req, res) => {
 })
 
 // todo editing page
-router.get('/:id/edit', (req, res) => {
+router.get('/:id/edit', authenticated, (req, res) => {
   Todo.findById(req.params.id, (err, todo) => {
     if (err) console.error(err)
     res.render('edit', { todo: todo })
@@ -44,7 +46,7 @@ router.get('/:id/edit', (req, res) => {
 })
 
 // edit a todo
-router.put('/:id', (req, res) => {
+router.put('/:id', authenticated, (req, res) => {
   Todo.findById(req.params.id, (err, todo) => {
     if (err) console.error(err)
     todo.name = req.body.name
@@ -61,7 +63,7 @@ router.put('/:id', (req, res) => {
 })
 
 // delete a todo
-router.delete('/:id/delete', (req, res) => {
+router.delete('/:id/delete', authenticated, (req, res) => {
   Todo.findById(req.params.id, (err, todo) => {
     if (err) console.error(err)
     todo.remove(err => {
