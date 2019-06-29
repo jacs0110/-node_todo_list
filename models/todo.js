@@ -10,6 +10,16 @@ const todoSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    index: true,
+    required: true
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  }
 })
 
 module.exports = mongoose.model('Todo', todoSchema)
