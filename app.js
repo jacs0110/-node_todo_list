@@ -16,7 +16,11 @@ app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Use express session 
-app.use(session({ secret: 'your secret key' }))
+app.use(session({
+  secret: 'your secret key',
+  resave: 'false',
+  saveUninitialized: 'false'
+}))
 
 // Use Passport 
 app.use(passport.initialize())
@@ -32,7 +36,7 @@ app.use((req, res, next) => {
 })
 
 // connect to db
-mongoose.connect('mongodb://localhost/todo', { useNewUrlParser: true })
+mongoose.connect('mongodb://localhost/todo', { useNewUrlParser: true, useCreateIndex: true })
 const db = mongoose.connection
 
 // Error when connecting to db
