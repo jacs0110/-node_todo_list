@@ -9,7 +9,6 @@ const port = 3000
 const session = require('express-session')
 const passport = require('passport')
 
-
 // setup the app
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
