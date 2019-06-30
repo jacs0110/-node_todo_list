@@ -10,6 +10,10 @@ const session = require('express-session')
 const passport = require('passport')
 
 // setup the app
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
 app.use(methodOverride('_method'))
@@ -55,6 +59,7 @@ const User = require('./models/user.js')
 
 // routes 
 app.use('/', require('./routes/home.js'))
+app.use('/auth', require('./routes/auths.js'))
 app.use('/todos', require('./routes/todo.js'))
 app.use('/users', require('./routes/user.js'))
 
