@@ -8,6 +8,7 @@ const methodOverride = require('method-override')
 const port = 3000
 const session = require('express-session')
 const passport = require('passport')
+const flash = require('connect-flash')
 
 // setup the app
 if (process.env.NODE_ENV !== 'production') {
@@ -18,6 +19,7 @@ app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
 app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(flash())
 
 // Use express session 
 app.use(session({
@@ -36,6 +38,9 @@ require('./config/passport.js')(passport)
 app.use((req, res, next) => {
   res.locals.user = req.user
   res.locals.isAuthenticated = req.isAuthenticated
+  res.locals.success_msg = req.flash('success_msg')
+  res.locals.warning_msg = req.flash('warning_msg')
+  // res.locals.errors = [{ message: req.flash('error') }]
   next()
 })
 
